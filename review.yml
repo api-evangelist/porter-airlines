@@ -74,6 +74,16 @@ findings:
         result: 'CNAME ghs.google.com (Google Workspace)'
       - host: www.flyporter.com
         result: 'CNAME www.flyporter.com.cdn.cloudflare.net (Cloudflare)'
+      - host: status.flyporter.com
+        result: 'NXDOMAIN (no A record) — round 2 probe; no status page'
+      - host: trust.flyporter.com
+        result: 'NXDOMAIN (no A record) — round 2 probe; no trust center'
+      - host: security.flyporter.com
+        result: 'NXDOMAIN (no A record) — round 2 probe'
+      - host: partners.flyporter.com
+        result: 'NXDOMAIN (no A record) — round 2 probe'
+      - host: booking.flyporter.com
+        result: 'A 54.156.15.225, 3.217.51.214 — resolves but no service on 443'
     http:
       - url: https://www.flyporter.com/
         status: 403
@@ -111,6 +121,56 @@ findings:
         status: 404
       - url: https://www.flyporter.com/llms.txt
         status: 404
+      - url: https://www.flyporter.com/.well-known/openid-configuration
+        status: 404
+        note: 'round 2 probe (2026-07-28); 301 into the locale router, terminates at /error/notfound'
+      - url: https://www.flyporter.com/.well-known/oauth-authorization-server
+        status: 404
+        note: 'round 2 probe (2026-07-28)'
+      - url: https://www.flyporter.com/.well-known/oauth-protected-resource
+        status: 404
+        note: 'round 2 probe (2026-07-28)'
+      - url: https://www.flyporter.com/.well-known/api-catalog
+        status: 404
+        note: 'round 2 probe (2026-07-28); RFC 9727 API catalog absent'
+      - url: https://www.flyporter.com/openapi.yaml
+        status: 404
+        note: 'round 2 probe (2026-07-28)'
+      - url: https://www.flyporter.com/redoc
+        status: 404
+        note: 'round 2 probe (2026-07-28)'
+      - url: https://booking.flyporter.com/
+        status: 0
+        note: >-
+          round 2 probe (2026-07-28). DNS resolves to 54.156.15.225 /
+          3.217.51.214 but the host does not answer on 443; /openapi.json,
+          /swagger.json, /api-docs and /.well-known/security.txt all return
+          curl status 000.
+      - url: https://tre8ie7n00.execute-api.us-east-1.amazonaws.com/ProdStage/openapi.json
+        status: 200
+        note: >-
+          round 2 probe (2026-07-28). The undocumented AWS API Gateway stage
+          answers every path — stage root, /openapi.json, /swagger.json,
+          /api-docs — with the same catch-all JSON body
+          {"message": "[<caller-ip>] Thanks for the visit."}. No contract, no
+          operations, no discovery document. Still excluded from apis.yml.
+      - url: https://api.github.com/orgs/porter-airlines
+        status: 404
+        note: 'round 2 probe (2026-07-28); no Porter Airlines GitHub organization under this name'
+      - url: https://github.com/FlyPorter
+        status: 200
+        note: >-
+          round 2 probe (2026-07-28). NOT Porter Airlines. An unverified
+          two-repo organization created 2025-10-15 whose README identifies it
+          as a University of Toronto student course project. No
+          GitHubOrganization pointer is emitted.
+      - url: https://registry.npmjs.org/-/v1/search?text=porter+airlines
+        status: 200
+        note: >-
+          round 2 probe (2026-07-28). Zero first-party results — every hit is a
+          Porter *stemmer* or an unrelated namesake package. PyPI returns 404
+          for both flyporter and porter-airlines. No SDK or client library
+          exists, so no packages/ artifact and no SDKs pointer.
       - url: https://www.flyporter.com/robots.txt
         status: 200
         note: >-

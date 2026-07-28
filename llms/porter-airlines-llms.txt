@@ -1,0 +1,49 @@
+# Porter Airlines
+
+> Porter Airlines is a Canadian carrier headquartered in Toronto (IATA designator PD, IATA ticketing plate 451, ICAO POE), flying an Embraer E195-E2 and De Havilland Dash 8 fleet across domestic, transborder and sun destinations. Porter publishes NO public or partner API: there is no developer portal, no API documentation, no OpenAPI or other machine-readable contract, and no NDC endpoint. Agencies reach Porter inventory through the GDSs (Sabre, Travelport) or through Porter's human-only, ticketless Travel Agency Portal on flyporter.com.
+
+## Machine-readable contract
+
+- No OpenAPI, AsyncAPI, GraphQL, gRPC or MCP surface is published by Porter Airlines. Every well-known specification path on flyporter.com returns 404; the developer., developers., apis. and corporate. subdomains do not resolve; api.flyporter.com resolves but does not answer on port 80 or 443; docs.flyporter.com redirects to an internal Google Drive.
+- [APIs.json / apis.yml](https://raw.githubusercontent.com/api-evangelist/porter-airlines/refs/heads/main/apis.yml): the API Evangelist machine-readable index for Porter Airlines, carrying an intentionally empty `apis[]` array.
+- [review.yml](https://raw.githubusercontent.com/api-evangelist/porter-airlines/refs/heads/main/review.yml): the full probe log — an HTTP status for every URL checked — plus the switching-cost analysis.
+
+## Distribution
+
+- Global Distribution Systems — Porter files fares to tariff (ATPCO) and sells through the GDSs; the Agency Terms name Sabre explicitly and Duffel accesses Porter content through Travelport.
+- [Porter Travel Agency Portal](https://www.flyporter.com/en-ca/services/travel-agents) — ticketless, human web sign-in only, no API and no documentation.
+- NDC — none. NDC is not referenced in any Porter agency document and no NDC certification is claimed.
+
+## Travel agency surface
+
+- [Travel Agents](https://www.flyporter.com/en-ca/services/travel-agents): the agency landing page, sign-in, and policy library.
+- [Agency Registration](https://www.flyporter.com/en-ca/services/travel-agents/agency-registration): accreditation-gated registration (ARC accreditation and/or an IATA Passenger Sales Agency Agreement).
+- [Travel Agent Sign In](https://www.flyporter.com/en-ca/services/travel-agents/sign-in): the only programmatic-adjacent access point, and it is a browser form.
+- [Agency Support](https://porteragency.zendesk.com/hc/en-ca/requests/new): Zendesk request form for accredited agencies.
+
+## Terms and policies
+
+- [Agency Terms and Conditions (PDF, effective 2026-07-15)](https://www.flyporter.com/Content/Documents/TravelAgents/en/terms-and-conditions.pdf): asserts Porter ownership of all "Porter Data", prohibits screen scraping, spiders and web bots, bans redistribution to third parties, imposes a service-fee MFN, and revokes all data rights on suspension or termination.
+- [Booking and Ticketing Policy (PDF)](https://www.flyporter.com/Content/Documents/TravelAgents/en/booking-and-ticketing-policy.pdf)
+- [Standard Commission Policy (PDF)](https://www.flyporter.com/Content/Documents/TravelAgents/en/porter-airlines-commission-policy.pdf)
+- [Privacy Policy](https://www.flyporter.com/en-ca/privacy): PIPEDA access and correction by written request to the Privacy Officer, 30-day response. This is the only published data-portability commitment.
+
+## Standards in play (none implemented by Porter directly)
+
+- GDS EDIFACT / Travelport JSON — intermediary message formats.
+- ATPCO fare filing, including Category 16 Penalties, cited by Porter's own Name Change and Correction Policy.
+- IATA Resolution 824 Passenger Sales Agency Agreement; IATA BSP and ARC settlement.
+- Secure Flight Passenger Data (SFPD).
+- IATA NDC — absent entirely.
+
+## Company
+
+- [Website](https://www.flyporter.com/)
+- [Who We Are](https://www.flyporter.com/en-ca/about-porter/who-we-are)
+- [Media Centre](https://www.flyporter.com/en-ca/about-porter/media-centre)
+- [IATA member profile](https://www.iata.org/en/about/members/airline-list/porter-airlines/670/)
+
+## Notes for agents
+
+- flyporter.com sits behind a Cloudflare bot challenge and publishes Content-Signal `search=yes, ai-train=no, use=reference` in robots.txt. Do not train on this content; reference only.
+- There is no API to call, no credential to obtain, and no rate limit to respect, because no interface is published. Any programmatic access to Porter inventory runs through a GDS or an aggregator that holds a GDS agreement.

@@ -1,0 +1,115 @@
+generated: '2026-07-28'
+method: derived
+source: review.yml
+note: >-
+  Porter Airlines publishes no machine-readable API contract, so there is no
+  OpenAPI, AsyncAPI or securityScheme to derive technical conformance from.
+  What follows is derived from the probe log and the agency documents captured
+  in review.yml: the API/web standards Porter demonstrably does NOT implement,
+  and the airline-industry standards Porter participates in commercially
+  through intermediaries. Nothing here is asserted on Porter's behalf beyond
+  what a named source states.
+scope: company
+standards:
+  # ---- API / web standards: none implemented, all probed ----
+  - id: openapi
+    conforms: false
+    evidence: >-
+      /openapi.json, /openapi.yaml, /swagger.json, /api-docs on
+      www.flyporter.com all return 404; developer., developers. and apis.
+      subdomains are NXDOMAIN. See review.yml findings.probes.http.
+  - id: asyncapi
+    conforms: false
+    evidence: 'No event, streaming or webhook surface is published.'
+  - id: graphql
+    conforms: false
+    evidence: 'No /graphql endpoint is published or documented.'
+  - id: mcp
+    conforms: false
+    evidence: 'No Model Context Protocol server is published or referenced.'
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      /.well-known/oauth-authorization-server and
+      /.well-known/openid-configuration are not served. Agency access is a
+      human web sign-in form, not a token-issuing authorization server.
+  - id: oidc
+    conforms: false
+    evidence: 'No OpenID Connect discovery document is served.'
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: 'No API, therefore no error envelope.'
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: '/.well-known/security.txt returns 404 on www.flyporter.com.'
+  - id: rfc9727-api-catalog
+    conforms: false
+    evidence: '/.well-known/api-catalog is not served.'
+  - id: llms-txt
+    conforms: false
+    evidence: >-
+      /llms.txt returns 404. robots.txt does carry Cloudflare Content-Signal
+      directives (search=yes, ai-train=no, use=reference).
+  # ---- Airline industry standards: participation via intermediaries ----
+  - id: iata-ndc
+    conforms: false
+    evidence: >-
+      NDC is not referenced in the Agency Terms and Conditions, Booking and
+      Ticketing Policy, Standard Commission Policy, or Name Change and
+      Correction Policy. No NDC certification level is claimed and no NDC
+      endpoint is published.
+  - id: iata-resolution-824
+    conforms: true
+    role: participant
+    evidence: >-
+      Agency Terms and Conditions require an IATA Passenger Sales Agency
+      Agreement (IATA PSAA) per Resolution 824, and/or an ARC Agent Reporting
+      Agreement, as a precondition of appointment.
+    source: https://www.flyporter.com/Content/Documents/TravelAgents/en/terms-and-conditions.pdf
+  - id: iata-bsp-arc-settlement
+    conforms: true
+    role: participant
+    evidence: >-
+      Standard Commission Policy lists "GDS (E-ticketed via BSP)" as a
+      distribution channel; the terms reference ARC accreditation and traffic
+      documents for US locations.
+    source: https://www.flyporter.com/Content/Documents/TravelAgents/en/porter-airlines-commission-policy.pdf
+  - id: atpco-fare-filing
+    conforms: true
+    role: participant
+    evidence: >-
+      Porter's Name Change and Correction Policy cites ATPCO Category 16
+      (Penalties) as the authoritative source of change and name-change rules;
+      the Standard Commission Policy maps fare families to the 8th character of
+      the ATPCO fare basis code.
+    source: https://www.flyporter.com/Content/Documents/TravelAgents/en/Porter_Airlines_Name_Change_Correction_Policy_for_GDS_Bookings_13Jun25.pdf
+  - id: gds-edifact
+    conforms: true
+    role: participant
+    evidence: >-
+      Inventory is reached through the GDSs. Agency Terms section 4.3.6 names
+      the Sabre GDS explicitly; Duffel states it accesses Porter (PD) content
+      through Travelport. The message format belongs to the GDS, not to Porter.
+  - id: secure-flight-passenger-data
+    conforms: true
+    role: participant
+    evidence: >-
+      SFPD is recorded in review.yml as one of the shared industry identifiers
+      carried on Porter bookings. It is a US TSA programme requirement on the
+      carrier, not an interface Porter publishes.
+  # ---- Privacy / data protection regime ----
+  - id: pipeda
+    conforms: true
+    role: subject
+    evidence: >-
+      Porter's privacy policy publishes a PIPEDA access and correction right
+      exercised by written request to the Privacy Officer, with a response
+      within 30 days.
+    source: https://www.flyporter.com/en-ca/privacy
+compliance_program:
+  published: false
+  note: >-
+    No trust center, no SOC 2 / ISO 27001 / PCI DSS attestation page, and no
+    security or compliance documentation was found on flyporter.com. Porter
+    holds IATA IOSA certification (operational safety audit, 2026), which is an
+    aviation safety standard, not an information-security compliance program.

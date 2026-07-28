@@ -1,0 +1,85 @@
+generated: '2026-07-28'
+method: searched
+source: live probes of the flyporter.com hosts
+result: none
+note: >-
+  Porter Airlines serves no /.well-known/ discovery documents. Every path below
+  302/301-redirects into the site's ASP.NET locale router and terminates at
+  https://www.flyporter.com/error/notfound (HTTP 404). Probed with an HTTP/1.1
+  browser User-Agent; the default HTTP/2 path returns a Cloudflare 403 bot
+  challenge instead, which is why the raw status is recorded alongside the
+  followed status. No raw documents were saved because none exist, and no
+  WellKnown or SecurityTxt pointer is emitted in apis.yml because nothing was
+  retrieved.
+hosts:
+  - host: https://www.flyporter.com
+    reachable: true
+    note: 'Cloudflare-fronted; whole-site bot protection.'
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+        raw_status: 302
+        final_url: https://www.flyporter.com/error/notfound?aspxerrorpath=/.well-known/security.txt
+      - path: /.well-known/openid-configuration
+        status: 404
+        raw_status: 301
+        final_url: https://www.flyporter.com/error/notfound?aspxerrorpath=/en-ca/.well-known/openid-configuration
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+        raw_status: 301
+        final_url: https://www.flyporter.com/error/notfound?aspxerrorpath=/en-ca/.well-known/oauth-authorization-server
+      - path: /.well-known/oauth-protected-resource
+        status: 404
+        raw_status: 301
+        final_url: https://www.flyporter.com/error/notfound?aspxerrorpath=/en-ca/.well-known/oauth-protected-resource
+      - path: /.well-known/api-catalog
+        status: 404
+        raw_status: 301
+        final_url: https://www.flyporter.com/error/notfound?aspxerrorpath=/en-ca/.well-known/api-catalog
+      - path: /.well-known/ai-plugin.json
+        status: 404
+        raw_status: 302
+        final_url: https://www.flyporter.com/error/notfound?aspxerrorpath=/.well-known/ai-plugin.json
+      - path: /llms.txt
+        status: 404
+        raw_status: 302
+      - path: /openapi.json
+        status: 404
+        raw_status: 302
+      - path: /swagger.json
+        status: 404
+        raw_status: 302
+      - path: /api-docs
+        status: 404
+        raw_status: 301
+      - path: /robots.txt
+        status: 200
+        note: >-
+          The only machine-readable policy document Porter serves. Cloudflare-
+          managed, carrying Content-Signal "search=yes, ai-train=no,
+          use=reference" and disallowing Amazonbot, Applebot-Extended and
+          Bytespider.
+  - host: https://api.flyporter.com
+    reachable: false
+    note: >-
+      Resolves (34.225.119.133, 54.157.223.200) but does not answer on 80 or
+      443; curl returns exit 28 / status 000. No discovery surface to probe.
+  - host: https://booking.flyporter.com
+    reachable: false
+    note: >-
+      Resolves (54.156.15.225, 3.217.51.214) but does not answer on 443; all
+      probes return status 000.
+  - host: https://tre8ie7n00.execute-api.us-east-1.amazonaws.com/ProdStage
+    reachable: true
+    published: false
+    note: >-
+      Undocumented AWS API Gateway stage referenced by flyporter.com front-end
+      markup. Every path probed (stage root, /openapi.json, /swagger.json,
+      /api-docs) returns HTTP 200 with the same catch-all JSON body
+      {"message": "[<caller-ip>] Thanks for the visit."} — no contract, no
+      operations, no discovery document. It is an internal implementation
+      detail and is deliberately excluded from apis.yml.
+security_txt:
+  present: false
+  status: 404
+  path: /.well-known/security.txt

@@ -30,6 +30,25 @@ The `developer.`, `developers.`, `apis.` and `corporate.` subdomains do not reso
 
 Full probe log, with an HTTP status for every URL, is in [review.yml](review.yml).
 
+## Artifacts
+
+Everything here is either a live probe record or an honest derivation. Nothing is generated to fill a slot.
+
+| Artifact | File | Method | Finding |
+| --- | --- | --- | --- |
+| Well-Known | [well-known/porter-airlines-well-known.yml](well-known/porter-airlines-well-known.yml) | searched | No `/.well-known/` surface. `security.txt`, `openid-configuration`, `oauth-authorization-server`, `oauth-protected-resource`, `api-catalog` and `ai-plugin.json` all redirect into the ASP.NET locale router and end at `/error/notfound` (404). `robots.txt` is the only machine-readable policy document Porter serves. |
+| Domain security | [security/porter-airlines-domain-security.yml](security/porter-airlines-domain-security.yml) | probed | TLS 1.3 on `www.flyporter.com`, **no HSTS**, **no DNSSEC**, **no CAA**, SPF present, DMARC present but `p=none`. |
+| Conformance | [conformance/porter-airlines-conformance.yml](conformance/porter-airlines-conformance.yml) | derived | Zero API/web standards implemented (OpenAPI, AsyncAPI, GraphQL, MCP, OAuth 2.0, OIDC, RFC 9457, RFC 9116, RFC 9727, llms.txt all absent). Participation only, through intermediaries, in IATA Resolution 824, BSP/ARC settlement, ATPCO fare filing, GDS EDIFACT and SFPD. IATA NDC absent entirely. |
+| llms.txt | [llms/porter-airlines-llms.txt](llms/porter-airlines-llms.txt) | generated | Porter serves no `/llms.txt`; this one is generated from the catalog so an agent gets the true answer — there is nothing to call — instead of guessing. |
+
+Negative findings worth recording, because each is a place a researcher would otherwise stop:
+
+- **`github.com/FlyPorter` is not Porter Airlines.** It is an unverified two-repo organization created 2025-10-15 whose README names a University of Toronto student team. No `GitHubOrganization` pointer is emitted.
+- **No SDK, in any language.** npm returns only Porter *stemmer* packages and namesakes; PyPI 404s for `flyporter` and `porter-airlines`.
+- **The AWS API Gateway endpoint is a dead end.** `tre8ie7n00.execute-api.us-east-1.amazonaws.com/ProdStage` answers 200 on every path — including `/openapi.json` — with the same catch-all body `{"message": "[<caller-ip>] Thanks for the visit."}`. No contract, no operations.
+- **No status page, no trust center.** `status.`, `trust.`, `security.` and `partners.flyporter.com` are all NXDOMAIN, so no `StatusPage`, `Deprecation`, `Security`, `Compliance` or `TrustCenter` pointer is emitted.
+- **`booking.flyporter.com` resolves but does not answer** on 443, same shape as `api.flyporter.com`.
+
 ## Switching Cost
 
 The point of this profile. Summarised from the `switchingCost` block in [review.yml](review.yml).

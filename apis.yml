@@ -43,13 +43,15 @@ modified: '2026-07-28'
 specificationVersion: '0.19'
 apis: []
 common:
+  - type: DomainSecurity
+    url: security/porter-airlines-domain-security.yml
   - type: Website
     url: https://www.flyporter.com/
   - type: TravelAgentPortal
     url: https://www.flyporter.com/en-ca/services/travel-agents
-  - type: Signup
+  - type: SignUp
     url: https://www.flyporter.com/en-ca/services/travel-agents/agency-registration
-  - type: SignIn
+  - type: Login
     url: https://www.flyporter.com/en-ca/services/travel-agents/sign-in
   - type: TermsOfService
     url: https://www.flyporter.com/Content/Documents/TravelAgents/en/terms-and-conditions.pdf
@@ -57,7 +59,7 @@ common:
     url: https://www.flyporter.com/Content/Documents/TravelAgents/en/booking-and-ticketing-policy.pdf
   - type: Policy
     url: https://www.flyporter.com/Content/Documents/TravelAgents/en/porter-airlines-commission-policy.pdf
-  - type: Privacy
+  - type: PrivacyPolicy
     url: https://www.flyporter.com/en-ca/privacy
   - type: Support
     url: https://porteragency.zendesk.com/hc/en-ca/requests/new
@@ -69,6 +71,10 @@ common:
     url: https://www.iata.org/en/about/members/airline-list/porter-airlines/670/
   - type: LinkedIn
     url: https://www.linkedin.com/company/porter-airlines
+  - type: LLMsTxt
+    url: llms/porter-airlines-llms.txt
+  - type: Conformance
+    url: conformance/porter-airlines-conformance.yml
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
