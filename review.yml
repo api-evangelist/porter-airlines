@@ -1,0 +1,433 @@
+aid: porter-airlines
+name: Porter Airlines
+review:
+  question: >-
+    Does Porter Airlines publish any public or partner API, and what would it
+    cost a travel agency customer to leave Porter?
+  answer: false
+  date: '2026-07-28'
+  reviewer: API Evangelist
+  tier: airline
+  homeMarket: Canada
+  primaryDomain: flyporter.com
+findings:
+  summary: |
+    Porter Airlines publishes no API of any kind. There is no developer portal,
+    no partner API documentation, no OpenAPI or other machine-readable contract,
+    and no NDC endpoint. The consumer surface is flyporter.com plus an iOS and
+    Android app; the distribution surface is the GDSs plus a proprietary,
+    human-only, ticketless Travel Agency Portal reached by web sign-in on
+    flyporter.com. Every artifact a partner touches technically is somebody
+    else's: Sabre and Travelport EDIFACT/JSON, ATPCO-filed fares, IATA BSP and
+    ARC settlement. Porter itself ships nothing machine-readable.
+
+    The commercial contract is where the switching cost lives. Porter's Agency
+    Terms and Conditions (effective July 15, 2026) require ARC accreditation or
+    an IATA Passenger Sales Agency Agreement, let Porter suspend or terminate an
+    appointment immediately and at sole discretion, assert Porter ownership of
+    all "Porter Data" including every PNR, prohibit scraping, bots, spiders and
+    redistribution, impose an MFN clause on agency service fees, forbid bidding
+    on Porter content through Kayak and Skyscanner, forbid membership in more
+    than one travel association at a time, and cut off all data rights the
+    instant an appointment is suspended or terminated.
+  consumerSurface:
+    documented: false
+    note: >-
+      Flight status, check-in, and the VIPorter loyalty programme are delivered
+      through flyporter.com and the Porter Airlines mobile app only. No public
+      consumer API is documented.
+  distributionSurface:
+    documented: false
+    channels:
+      - name: Global Distribution Systems
+        evidence: >-
+          Agency Terms and Conditions section 4.3.6 names the Sabre GDS
+          explicitly ("The Agency shall not book Passive Segments through the
+          Sabre GDS, but may book Passive Segments through any other GDS").
+          Commission Policy lists "GDS (E-ticketed via BSP)" as a channel.
+          Duffel states it accesses Porter (IATA PD) content through Travelport.
+      - name: Porter Travel Agency Portal (ticketless)
+        evidence: >-
+          Named as a distinct channel in the Standard Commission Policy;
+          reached only by human web sign-in at
+          https://www.flyporter.com/en-ca/services/travel-agents/sign-in.
+          No API, no documentation, no machine-readable contract.
+      - name: NDC
+        evidence: >-
+          None found. NDC is not mentioned once in the Agency Terms and
+          Conditions, Booking and Ticketing Policy, Standard Commission Policy,
+          Name Change and Correction Policy, or any travel-agent page. No NDC
+          certification for Porter was found in IATA material or trade press.
+  probes:
+    dns:
+      - host: developer.flyporter.com
+        result: NXDOMAIN (no A record)
+      - host: developers.flyporter.com
+        result: NXDOMAIN (no A record)
+      - host: apis.flyporter.com
+        result: NXDOMAIN (no A record)
+      - host: corporate.flyporter.com
+        result: NXDOMAIN (no A record)
+      - host: api.flyporter.com
+        result: 'A 34.225.119.133, 54.157.223.200 — resolves but no service'
+      - host: docs.flyporter.com
+        result: 'CNAME ghs.google.com (Google Workspace)'
+      - host: www.flyporter.com
+        result: 'CNAME www.flyporter.com.cdn.cloudflare.net (Cloudflare)'
+    http:
+      - url: https://www.flyporter.com/
+        status: 403
+        note: >-
+          Cloudflare "Just a moment..." bot challenge on HTTP/2. HTTP/1.1 with a
+          browser User-Agent returns 200. Whole-site bot protection.
+      - url: https://api.flyporter.com/
+        status: 0
+        note: 'curl exit 28 (connect timeout) on both http and https'
+      - url: http://docs.flyporter.com/
+        status: 302
+        note: 'redirects to https://drive.google.com/a/flyporter.com (internal Drive)'
+      - url: https://docs.flyporter.com/
+        status: 0
+        note: 'curl exit 35 (TLS error) — no public docs site'
+      - url: https://www.flyporter.com/openapi.json
+        status: 404
+      - url: https://www.flyporter.com/swagger.json
+        status: 404
+      - url: https://www.flyporter.com/api-docs
+        status: 404
+      - url: https://www.flyporter.com/api
+        status: 404
+      - url: https://www.flyporter.com/apis
+        status: 404
+      - url: https://www.flyporter.com/developer
+        status: 404
+      - url: https://www.flyporter.com/developers
+        status: 404
+      - url: https://www.flyporter.com/docs
+        status: 404
+      - url: https://www.flyporter.com/.well-known/security.txt
+        status: 404
+      - url: https://www.flyporter.com/.well-known/ai-plugin.json
+        status: 404
+      - url: https://www.flyporter.com/llms.txt
+        status: 404
+      - url: https://www.flyporter.com/robots.txt
+        status: 200
+        note: >-
+          Cloudflare-managed. Content-Signal search=yes, ai-train=no,
+          use=reference. Disallows Amazonbot, Applebot-Extended, Bytespider.
+      - url: https://www.flyporter.com/sitemap.xml
+        status: 200
+        note: >-
+          Four locale sitemap indexes. en-ca web sitemap holds 93 URLs and
+          contains zero developer, API, or documentation pages.
+      - url: https://www.flyporter.com/en-ca/services/travel-agents
+        status: 200
+      - url: https://www.flyporter.com/en-ca/services/travel-agents/agent-registration
+        status: 200
+      - url: https://www.flyporter.com/en-ca/services/travel-agents/agency-registration
+        status: 200
+      - url: https://www.flyporter.com/en/services/travel-agents/sign-in
+        status: 200
+      - url: https://www.flyporter.com/en-ca/services/corporate-travel
+        status: 200
+        note: 'marketing page with a contact form only; no self-serve, no API'
+      - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/terms-and-conditions.pdf
+        status: 200
+        note: '24-page Agency Terms and Conditions PDF, effective July 15, 2026'
+      - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/booking-and-ticketing-policy.pdf
+        status: 200
+        note: '5-page Booking and Ticketing Policy, effective Nov 28, 2023'
+      - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/Porter_Airlines_Booking_Ticketing__Policy_01Aug2024.pdf
+        status: 200
+        note: 'later Booking and Ticketing Policy revision, Aug 1, 2024'
+      - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/porter-airlines-commission-policy.pdf
+        status: 200
+        note: 'Standard Commission Policy, effective Jun 25, 2025'
+      - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/Porter_Airlines_Name_Change_Correction_Policy_for_GDS_Bookings_13Jun25.pdf
+        status: 200
+      - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/Partnership_with_Flex_Travel_Solutions.pdf
+        status: 200
+      - url: https://www.flyporter.com/en-ca/privacy
+        status: 200
+      - url: https://porteragency.zendesk.com/hc/en-ca
+        status: 403
+        note: 'agency help centre requires sign-in'
+      - url: https://www.iata.org/en/about/members/airline-list/porter-airlines/670/
+        status: 200
+      - url: https://duffel.com/flights/airlines/porter-airlines
+        status: 200
+      - url: https://www.linkedin.com/company/porter-airlines
+        status: 429
+        note: 'LinkedIn rate-limited the probe; page not independently confirmed'
+      - url: https://www.flyporter.com/en-us/services/travel-agents/porter-escapes
+        status: 404
+        note: >-
+          Surfaced in search results as a Porter Escapes agent resource guide
+          referencing Sirev and Sabre Vacations, but the page 404s on fetch, so
+          that claim is recorded as unverified and is not asserted anywhere in
+          apis.yml.
+  observedButUndocumented:
+    - host: https://tre8ie7n00.execute-api.us-east-1.amazonaws.com/ProdStage
+      note: >-
+        AWS API Gateway endpoint referenced by flyporter.com front-end markup.
+        Undocumented, unversioned, no published contract, no terms of use. It is
+        an internal implementation detail, NOT a published API, and is
+        deliberately excluded from apis.yml.
+switchingCost:
+  interfaceShape:
+    value: none-published
+    standardNamed: >-
+      No standard is implemented by Porter directly. The standards in play
+      belong to intermediaries: GDS EDIFACT / Travelport JSON, ATPCO fare filing
+      (Category 16 "Penalties" is cited by Porter's own Name Change and
+      Correction Policy as the authoritative source of change and name-change
+      rules), IATA Resolution 824 Passenger Sales Agency Agreement, IATA BSP and
+      ARC settlement, and Secure Flight Passenger Data (SFPD). IATA NDC is
+      absent entirely.
+    evidence: >-
+      Zero spec paths resolve, zero developer subdomains resolve, the sitemap
+      contains no developer pages, and no agency document references an API,
+      a schema, a message format, or NDC.
+  secondSource:
+    value: no-alternative
+    alternativesConsidered: >-
+      For Porter's own seat inventory there is no second source — Porter is the
+      only route to a Porter seat, and at Toronto Billy Bishop (YTZ) it is
+      effectively the only scheduled operator. Air Canada, WestJet, Flair and
+      Air Transat are alternative carriers, not alternative sources of Porter
+      inventory; Air Transat appears in Porter's commission policy as a
+      codeshare partner, not a substitute. The CHANNEL is substitutable — an
+      agency can reach Porter through Sabre, through Travelport (the route
+      Duffel uses), or through Porter's own Travel Agency Portal — so switching
+      intermediary is a project, while switching supplier is impossible. That
+      asymmetry is the finding: Porter has commoditised its distributors and not
+      itself.
+  exitPath:
+    value: export-on-request
+    operationCited: >-
+      No export, dump, bulk or reporting operation exists, because no API
+      exists. The only published data-portability commitment is in the privacy
+      policy: "You have the right to access and correct Your personal
+      information. You can make a formal access or correction request by
+      contacting our Privacy Officer in writing... We will respond to your
+      access or correction request within a reasonable timeframe (but no later
+      than 30 days from your request) pursuant to applicable laws." That is a
+      PIPEDA access right exercised by letter, not a portability endpoint.
+    counterweight: >-
+      Agency Terms and Conditions section 8.3 forbids "accessing or using or
+      distributing Porter Data for any purpose after Agent's authority has been
+      suspended or terminated." Commission history is exportable to PDF and CSV,
+      but from Flex Travel Solutions — a third-party settlement platform Porter
+      partnered with on 2022-09-05 — not from Porter.
+  identifierPortability:
+    value: >-
+      Overwhelmingly shared industry identifiers, with one proprietary key.
+    identifiersFound:
+      - 'IATA designator: PD'
+      - 'IATA accounting / ticketing plate: 451 (cited in the terms as the "451 validation code" and in the booking policy as "PD/451")'
+      - 'ICAO code: POE'
+      - 'GDS PNR record locators (multiple GDSs, per the churning and duplicate-booking clauses)'
+      - 'IATA BSP and ARC traffic documents / e-ticket numbers'
+      - 'IATA or TIDS agency numbers (required at time of booking for commission)'
+      - 'ATPCO fare basis codes, with the 8th character carrying the fare family (L Basic, S Standard, F Flexible, E Freedom, V Navigate, U Ultimate)'
+      - 'Secure Flight Passenger Data (SFPD)'
+      - 'VIPorter loyalty numbers — proprietary to Porter, and section 8.2 explicitly says frequent-flyer membership data "cannot be used in isolation from other Porter Data" and so is not the agent''s to keep'
+    note: >-
+      Because the keys are industry-standard, an agency's Porter records remain
+      legible after a switch. The value that does not travel is the VIPorter
+      relationship and any Porter-specific fare or commission arrangement, both
+      of which the contract classes as Porter's Confidential Information.
+  contractualLockIn:
+    published: true
+    source: https://www.flyporter.com/Content/Documents/TravelAgents/en/terms-and-conditions.pdf
+    effective: '2026-07-15'
+    verbatim:
+      accreditationPrecondition: >-
+        "Your travel agency, including affiliated agency locations under common
+        control that are accredited by Airlines Reporting Corporation ("ARC") or
+        the International Air Transport Association ("IATA")... has entered into
+        either or both of the Agent Reporting Agreement (the "ARC Agreement")
+        with ARC... and the IATA Passenger Sales Agency Agreement (the "IATA
+        PSAA") with IATA..."
+      terminationAtWill: >-
+        "In its sole discretion and at any time, Porter may, upon written notice
+        to Agent, exercise its rights to suspend or limit Agent's Appointment,
+        including immediately terminating Porter's appointment of any Agency
+        Location or Agent's Appointment." (Section 2). No minimum term and no
+        notice period is published.
+      validationPlateSurrender: >-
+        "Porter's validation plate is Porter's sole property, and Agent will
+        surrender it immediately upon demand by Porter, ARC, or IATA. Agent
+        shall not use Porter's 451 validation code to circumvent termination..."
+        (Section 5)
+      dataOwnership: >-
+        Section 8.2 defines "Porter Data" to include data that identifies
+        Porter, data passed between customer and Porter including booking and
+        payment data, and frequent-flyer membership, and states it "is and will
+        be owned by Porter and is Confidential Information of Porter."
+      dataRightsRevokedOnExit: >-
+        Section 8.3 lists as prohibited "(xii) accessing or using or
+        distributing Porter Data for any purpose after Agent's authority has
+        been suspended or terminated."
+      antiScraping: >-
+        Section 8.3 prohibits "remarketing or redistribution of, any Porter Data
+        to any third party, through any process, including screen scraping,
+        spiders, web "bots" or other automated means."
+      redistributionBan: >-
+        "Agent's Appointment is specific to Agent, and does not include any
+        authority for Agent to act as an intermediary for distribution of
+        Porter's products and services via third parties... Agent may only
+        directly or indirectly redistribute Porter Data for use or display via
+        third party websites or services... if Porter is a party to any such
+        distribution arrangement." (Section 4.7.1). Section 4.7.2 carves out an
+        EU/UK exception for websites on member-state ccTLDs.
+      serviceFeeMFN: >-
+        "the charge or fee for an Porter booking or other Porter product or
+        service must be equal to the lowest fee imposed by Agent for other air
+        carriers." (Section 4.6.1)
+      contentModificationConsent: >-
+        "Agent shall not revise, delete, or change in any manner whatsoever any
+        Porter Data... Any modifications to the Porter Data by Agent shall be
+        subject to Porter's prior written approval, which may be withheld in
+        Porter's sole discretion." (Section 4.6.2)
+      metasearchBan: >-
+        "(b) Not to bid on the Airline's content through metasearch engines
+        Kayak and Skyscanner, and any other meta search/fare aggregator engines
+        as the Airline may hereafter direct in writing" and "the Agency shall
+        not purchase search terms or other online advertising which is targeted
+        using or containing the name "Porter"." (Sections 14.2(b), 14.3)
+      associationExclusivity: >-
+        "The Agency agrees not to join and be a member of more than one travel
+        association or group at the same time." (Section 14.4)
+      gdsSpecificRestriction: >-
+        "The Agency shall not book Passive Segments through the Sabre GDS, but
+        may book Passive Segments through any other GDS." (Section 4.3.6)
+      nonAccreditedThirdParties: >-
+        "Agent agrees not to facilitate or enable the promotion, sourcing or
+        booking of Porter products and services by third parties that perform
+        travel agent services without accreditation from either ARC or IATA,
+        unless expressly authorized to do so by Porter." (Section 4.3.7)
+      debitMemoFees: >-
+        "Porter Airlines will assess a $25.00 to $75.00 administrative fee for
+        each debit memo issued in the currency of the transaction." (Booking and
+        Ticketing Policy)
+    notPublished:
+      - 'No minimum term'
+      - 'No full-content agreement, GDS surcharge, or segment-fee schedule'
+      - 'No termination notice period (termination is immediate and at sole discretion)'
+      - 'No published API terms of use, rate limits, or SLA — because there is no API'
+  accessGate:
+    value: accredited-or-licensed
+    whatADeveloperMustSign: >-
+      There is nothing for a developer to sign, because there is nothing for a
+      developer to call. An AGENCY must (1) hold ARC accreditation for US
+      locations and/or an IATA Passenger Sales Agency Agreement per IATA
+      Resolution 824 for locations outside the US, or at minimum an IATA or TIDS
+      number to be commissionable; (2) register the agency and each agent at
+      flyporter.com/en-ca/services/travel-agents; (3) accept Porter's Agency
+      Terms and Conditions effective 2026-07-15, the Booking and Ticketing
+      Policy, and the Standard Commission Policy; (4) settle through IATA BSP or
+      the ARC Settlement Plan; and (5) enrol separately with Flex Travel
+      Solutions for backend commission payout. Reaching Porter inventory
+      programmatically additionally requires a commercial agreement with a GDS
+      (Sabre or Travelport) or with an aggregator that already holds one.
+  distributionModel:
+    value: gds-intermediated
+    ndcPosture: >-
+      No NDC. Porter joined IATA as a member in 2026 after IOSA certification of
+      its E195-E2 fleet, but no NDC certification level is claimed anywhere, no
+      NDC API is published, and NDC is not referenced in a single Porter agency
+      document. Fares are filed to tariff and rules are read out of ATPCO
+      Category 16 in the GDS — the pre-NDC model, intact. There is no evidence
+      of a GDS surcharge or a direct-connect incentive; the Standard Commission
+      Policy in fact pays 4-5% on GDS BSP e-tickets and 0% on most Porter Travel
+      Agency Portal bookings, which points the other way.
+    lowCostCarrierNote: >-
+      Porter is a hybrid, not a GDS-bypassing LCC. Unlike easyJet, Jet2, Jetstar
+      or Southwest, which historically kept inventory out of the GDS entirely,
+      Porter files fares and sells through the GDSs and pays commission on them.
+sources:
+  - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/terms-and-conditions.pdf
+    type: TermsOfService
+    fetched: '2026-07-28'
+    status: 200
+    note: >-
+      24-page Terms and Conditions Governing Travel Agency Agreements, effective
+      2026-07-15. Primary source for every contractual-lock-in quotation above.
+  - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/booking-and-ticketing-policy.pdf
+    type: Policy
+    fetched: '2026-07-28'
+    status: 200
+    note: >-
+      Effective 2023-11-28. Debit memo fees, churning, married segments, and the
+      GDS filed-tariff ticketing requirement.
+  - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/Porter_Airlines_Booking_Ticketing__Policy_01Aug2024.pdf
+    type: Policy
+    fetched: '2026-07-28'
+    status: 200
+    note: 'Later revision; source of the "PD/451" ticketing-plate language.'
+  - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/porter-airlines-commission-policy.pdf
+    type: Policy
+    fetched: '2026-07-28'
+    status: 200
+    note: >-
+      Effective 2025-06-25. Names the two distribution channels — "Porter Travel
+      Agency Portal (Ticketless)" and "GDS (E-ticketed via BSP)" — and maps fare
+      families to the 8th character of the fare basis.
+  - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/Porter_Airlines_Name_Change_Correction_Policy_for_GDS_Bookings_13Jun25.pdf
+    type: Policy
+    fetched: '2026-07-28'
+    status: 200
+    note: >-
+      Confirms agencies self-manage name corrections in their own GDS and that
+      Porter's rules are read out of ATPCO Category 16 - Penalties.
+  - url: https://www.flyporter.com/Content/Documents/TravelAgents/en/Partnership_with_Flex_Travel_Solutions.pdf
+    type: Policy
+    fetched: '2026-07-28'
+    status: 200
+    note: >-
+      Commission settlement moved to Flex Travel Solutions on 2022-09-05, with
+      PDF/CSV report export at the third party.
+  - url: https://www.flyporter.com/en-ca/services/travel-agents
+    type: TravelAgentPortal
+    fetched: '2026-07-28'
+    status: 200
+    note: >-
+      Human sign-in, agency/agent registration, and policy PDFs. No developer,
+      API, or integration link anywhere on the page.
+  - url: https://www.flyporter.com/en-ca/privacy
+    type: Privacy
+    fetched: '2026-07-28'
+    status: 200
+    note: 'PIPEDA access and correction by written request to the Privacy Officer, 30-day response.'
+  - url: https://www.iata.org/en/about/members/airline-list/porter-airlines/670/
+    type: Registry
+    fetched: '2026-07-28'
+    status: 200
+    note: >-
+      IATA member profile: legal name Porter Airlines (Canada) Limited, IATA
+      designator PD, airline code 451, ICAO POE, region The Americas, Canada.
+  - url: https://duffel.com/flights/airlines/porter-airlines
+    type: Reference
+    fetched: '2026-07-28'
+    status: 200
+    note: >-
+      "Currently, we access this airline's content through Travelport, a global
+      distribution system designed for the travel industry." Search and book
+      only; cancel/refund, seats, bags, loyalty and changes all listed as
+      coming soon.
+  - url: https://www.flyporter.com/robots.txt
+    type: Reference
+    fetched: '2026-07-28'
+    status: 200
+    note: 'Cloudflare content signals: search=yes, ai-train=no, use=reference.'
+actions:
+  openapiHarvested: false
+  specsCount: 0
+  apisListed: 0
+  reason: >-
+    Nothing machine-readable exists to harvest. apis.yml carries an empty apis[]
+    array by design, which is the correct and expected shape for a carrier whose
+    entire partner surface is a web sign-in plus a GDS relationship. The openapi/
+    directory is deliberately absent rather than empty.
