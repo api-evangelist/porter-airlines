@@ -1,4 +1,4 @@
-# Porter Airlines (porter-airlines)
+# Porter Airlines
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -64,97 +64,83 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Porter Airlines is a Canadian carrier headquartered in Toronto, operating as Porter Airlines (Canada) Limited and Porter Airlines Inc. under IATA designator PD, IATA ticketing plate 451, and ICAO code POE. It is the challenger to the Air Canada / WestJet duopoly in Canada, flying an Embraer E195-E2 and De Havilland Dash 8 fleet across domestic, transborder and sun destinations, and it joined IATA as a member in 2026 following IOSA certification. Porter sits in the distribution chain as a conventional GDS-intermediated carrier: agencies reach its inventory through the GDSs (Sabre is named explicitly in Porter's agency terms, and Travelport is the channel Duffel uses to resell Porter content) or through Porter's own ticketless Travel Agency Portal on flyporter.com. Porter's API posture is honestly stated as none-published. There is no developer portal, no public or partner API documentation, no OpenAPI, and no NDC endpoint of any kind.
+Porter Airlines is a Canadian carrier headquartered in Toronto, operating as Porter Airlines (Canada) Limited and Porter Airlines Inc. under IATA designator PD, IATA ticketing plate 451, and ICAO code POE. It is the challenger to the Air Canada / WestJet duopoly in Canada, flying an Embraer E195-E2 and De Havilland Dash 8 fleet across domestic, transborder and sun destinations, and it joined IATA as a member in 2026 following IOSA certification. Porter sits in the distribution chain as a conventional GDS-intermediated carrier: agencies reach its inventory through the GDSs (Sabre is named explicitly in Porter's agency terms, and Travelport is the channel Duffel uses to resell Porter content) or through Porter's own ticketless Travel Agency Portal on flyporter.com. Porter's API posture is honestly stated as none-published. There is no developer portal, no public or partner API documentation, no OpenAPI, and no NDC endpoint of any kind. The developer, developers and apis subdomains do not resolve; api.flyporter.com resolves but does not answer on 80 or 443; docs.flyporter.com redirects to an internal Google Drive. Every well-known spec path returns 404 and the whole site sits behind a Cloudflare bot challenge with ai-train=no content signals. Access is accreditation-gated: an agency must hold ARC accreditation or an IATA Passenger Sales Agency Agreement, register on flyporter.com, and accept Porter's Agency Terms and Conditions, which assert Porter ownership of all Porter Data, prohibit scraping and redistribution, and revoke all data rights the moment an appointment is suspended or terminated. There is no exit path beyond a written PIPEDA access request to Porter's Privacy Officer.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/porter-airlines/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/porter-airlines/refs/heads/main/apis.yml)
+**Areas:** Travel · Canada · Aviation · Airlines · Flights · Distribution · GDS · Booking · Travel Agents · Loyalty
 
-## Tags
+## Porter Airlines on APIs.io
 
-- Travel
-- Canada
-- Aviation
-- Airline
-- Flights
-- Distribution
-- GDS
-- Booking
-- Travel Agents
-- Loyalty
+Everything profiled for Porter Airlines is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/porter-airlines/](https://apis.io/providers/porter-airlines/)** — or go straight to one of the APIs or properties below.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2026-07-28
-- **Modified:** 2026-07-28
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### Security (1)
 
-None. Porter Airlines publishes no public or partner API.
+Authentication, trust centre, and vulnerability disclosure.
 
-The `developer.`, `developers.`, `apis.` and `corporate.` subdomains do not resolve. `api.flyporter.com` resolves to 34.225.119.133 / 54.157.223.200 but does not answer on port 80 or 443. `docs.flyporter.com` is a Google Workspace CNAME that redirects to an internal Google Drive. Every well-known specification path — `/openapi.json`, `/swagger.json`, `/api-docs`, `/api`, `/apis`, `/developer`, `/developers`, `/docs`, `/.well-known/security.txt`, `/.well-known/ai-plugin.json`, `/llms.txt` — returns 404. The `en-ca` sitemap holds 93 URLs and not one of them is a developer or documentation page. The whole site sits behind a Cloudflare bot challenge with `ai-train=no` content signals.
+- [Porter Airlines Domain Security](https://apis.io/security/porter-airlines/porter-airlines-domain-security/)
 
-Full probe log, with an HTTP status for every URL, is in [review.yml](review.yml).
+## Where to find this API
 
-## Artifacts
-
-Everything here is either a live probe record or an honest derivation. Nothing is generated to fill a slot.
-
-| Artifact | File | Method | Finding |
-| --- | --- | --- | --- |
-| Well-Known | [well-known/porter-airlines-well-known.yml](well-known/porter-airlines-well-known.yml) | searched | No `/.well-known/` surface. `security.txt`, `openid-configuration`, `oauth-authorization-server`, `oauth-protected-resource`, `api-catalog` and `ai-plugin.json` all redirect into the ASP.NET locale router and end at `/error/notfound` (404). `robots.txt` is the only machine-readable policy document Porter serves. |
-| Domain security | [security/porter-airlines-domain-security.yml](security/porter-airlines-domain-security.yml) | probed | TLS 1.3 on `www.flyporter.com`, **no HSTS**, **no DNSSEC**, **no CAA**, SPF present, DMARC present but `p=none`. |
-| Conformance | [conformance/porter-airlines-conformance.yml](conformance/porter-airlines-conformance.yml) | derived | Zero API/web standards implemented (OpenAPI, AsyncAPI, GraphQL, MCP, OAuth 2.0, OIDC, RFC 9457, RFC 9116, RFC 9727, llms.txt all absent). Participation only, through intermediaries, in IATA Resolution 824, BSP/ARC settlement, ATPCO fare filing, GDS EDIFACT and SFPD. IATA NDC absent entirely. |
-| llms.txt | [llms/porter-airlines-llms.txt](llms/porter-airlines-llms.txt) | generated | Porter serves no `/llms.txt`; this one is generated from the catalog so an agent gets the true answer — there is nothing to call — instead of guessing. |
-
-Negative findings worth recording, because each is a place a researcher would otherwise stop:
-
-- **`github.com/FlyPorter` is not Porter Airlines.** It is an unverified two-repo organization created 2025-10-15 whose README names a University of Toronto student team. No `GitHubOrganization` pointer is emitted.
-- **No SDK, in any language.** npm returns only Porter *stemmer* packages and namesakes; PyPI 404s for `flyporter` and `porter-airlines`.
-- **The AWS API Gateway endpoint is a dead end.** `tre8ie7n00.execute-api.us-east-1.amazonaws.com/ProdStage` answers 200 on every path — including `/openapi.json` — with the same catch-all body `{"message": "[<caller-ip>] Thanks for the visit."}`. No contract, no operations.
-- **No status page, no trust center.** `status.`, `trust.`, `security.` and `partners.flyporter.com` are all NXDOMAIN, so no `StatusPage`, `Deprecation`, `Security`, `Compliance` or `TrustCenter` pointer is emitted.
-- **`booking.flyporter.com` resolves but does not answer** on 443, same shape as `api.flyporter.com`.
-
-## Switching Cost
-
-The point of this profile. Summarised from the `switchingCost` block in [review.yml](review.yml).
-
-| Dimension | Finding |
-| --- | --- |
-| Interface shape | `none-published` — the standards in play (GDS EDIFACT, ATPCO fare filing, IATA Resolution 824, BSP/ARC settlement, SFPD) all belong to intermediaries, not to Porter |
-| Second source | `no-alternative` — the channel is swappable (Sabre, Travelport, aggregators), the supplier is not |
-| Exit path | `export-on-request` — a written PIPEDA access request to Porter's Privacy Officer, 30-day response; no export operation exists because no API exists |
-| Identifier portability | Mostly shared industry keys (PD, 451, POE, PNR locators, BSP/ARC documents, IATA/TIDS agency numbers, ATPCO fare bases, SFPD) plus proprietary VIPorter numbers |
-| Contractual lock-in | Published and specific — see below |
-| Distribution model | `gds-intermediated` |
-| NDC posture | None. No certification claimed, no endpoint published, NDC not referenced in any Porter agency document |
-| Access gate | `accredited-or-licensed` — ARC accreditation or an IATA Passenger Sales Agency Agreement |
-
-What the published terms actually say, from the Agency Terms and Conditions effective 2026-07-15:
-
-- Porter may **suspend or terminate an appointment immediately, at sole discretion**, on written notice. No minimum term and no notice period is published.
-- All **"Porter Data" is owned by Porter** and is its Confidential Information — including every PNR and all booking and payment data.
-- **Data rights end at termination**: prohibited uses include "accessing or using or distributing Porter Data for any purpose after Agent's authority has been suspended or terminated."
-- **No scraping**: "screen scraping, spiders, web 'bots' or other automated means" are prohibited.
-- **No redistribution**: an appointment "does not include any authority for Agent to act as an intermediary for distribution of Porter's products and services via third parties" unless Porter is a party to the arrangement. EU/UK ccTLD sites are carved out.
-- **Service-fee MFN**: an agency's fee on a Porter booking "must be equal to the lowest fee imposed by Agent for other air carriers."
-- **Metasearch ban**: no bidding on Porter content through Kayak and Skyscanner, and no buying search terms containing "Porter."
-- **Association exclusivity**: "The Agency agrees not to join and be a member of more than one travel association or group at the same time."
-- **Sabre-specific**: passive segments may be booked through any GDS except Sabre.
-- Debit memos carry a **$25.00 to $75.00 administrative fee** each.
-
-## Properties
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
 
 - [Website](https://www.flyporter.com/)
-- [Travel Agent Portal](https://www.flyporter.com/en-ca/services/travel-agents)
-- [Agency Registration](https://www.flyporter.com/en-ca/services/travel-agents/agency-registration)
-- [Travel Agent Sign In](https://www.flyporter.com/en-ca/services/travel-agents/sign-in)
-- [Agency Terms and Conditions](https://www.flyporter.com/Content/Documents/TravelAgents/en/terms-and-conditions.pdf)
-- [Booking and Ticketing Policy](https://www.flyporter.com/Content/Documents/TravelAgents/en/booking-and-ticketing-policy.pdf)
-- [Standard Commission Policy](https://www.flyporter.com/Content/Documents/TravelAgents/en/porter-airlines-commission-policy.pdf)
-- [Privacy Policy](https://www.flyporter.com/en-ca/privacy)
-- [Agency Support](https://porteragency.zendesk.com/hc/en-ca/requests/new)
-- [Media Centre](https://www.flyporter.com/en-ca/about-porter/media-centre)
-- [IATA Member Profile](https://www.iata.org/en/about/members/airline-list/porter-airlines/670/)
+- [Sign up](https://www.flyporter.com/en-ca/services/travel-agents/agency-registration)
+- [Support](https://porteragency.zendesk.com/hc/en-ca/requests/new)
+- [Terms of service](https://www.flyporter.com/Content/Documents/TravelAgents/en/terms-and-conditions.pdf)
+- [Privacy policy](https://www.flyporter.com/en-ca/privacy)
 
-## Maintainers
+## API Evangelist rating
 
-- Kin Lane — kin@apievangelist.com
+**Kin Score 14.5** — emerging · rubric 0.24.0 · scored 2026-10-17
+
+| Facet | Score |
+|---|---|
+| Discoverability | 56.3 |
+| Contract quality | 0.0 |
+| Contract governance | 4.5 |
+| Operational transparency | 0.0 |
+| Developer ergonomics | 4.8 |
+| Access clarity | 34.2 |
+
+**Agent readiness 0.0** — human-only
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | — |
+| Idempotency | — |
+| Error Semantics | — |
+| OpenAPI Examples | — |
+| Rate Limit Signal | — |
+| Event Surface Described | — |
+| Agent Skills | — |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+
+**Regulatory alignment 18.6** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/porter-airlines/](https://apis.io/providers/porter-airlines/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Porter Airlines: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/porter-airlines/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
